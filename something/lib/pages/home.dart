@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
-// import 'package:provider/provider.dart';
+import 'package:provider/provider.dart';
 import '../data/BannerData.dart';
-// import '../model/home.dart';
+import '../model/home.dart';
 import '../route/routes.dart';
 import '../api/homeApi.dart';
 
@@ -39,15 +39,15 @@ class _HomePageState extends State<HomePage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // ChangeNotifierProvider(
-              //   create: (_) => BannerModel(),
-              //   child: Consumer<BannerModel>(
-              //     builder: (context, bannerModel, child) {
-              //       return buildSwiperViewWidget(bannerModel.bannerList);
-              //     },
-              //   ),
-              // ),
-              buildSwiperViewWidget(bannerList),
+              ChangeNotifierProvider(
+                create: (_) => BannerModel(),
+                child: Consumer<BannerModel>(
+                  builder: (context, bannerModel, child) {
+                    return buildSwiperViewWidget(bannerModel.bannerList);
+                  },
+                ),
+              ),
+              // buildSwiperViewWidget(bannerList),
               buildListViewWidget()
             ],
           ),
