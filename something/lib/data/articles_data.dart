@@ -1,34 +1,4 @@
 class ArticleData {
-  ArticleList? data;
-  int? errorCode;
-  String? errorMsg;
-
-  ArticleData({this.data, this.errorCode, this.errorMsg});
-
-  ArticleData.fromJson(Map<String, dynamic> json) {
-    if (json["data"] is Map) {
-      data = json["data"] == null ? null : ArticleList.fromJson(json["data"]);
-    }
-    if (json["errorCode"] is int) {
-      errorCode = json["errorCode"];
-    }
-    if (json["errorMsg"] is String) {
-      errorMsg = json["errorMsg"];
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> _data = <String, dynamic>{};
-    if (data != null) {
-      _data["data"] = data?.toJson();
-    }
-    _data["errorCode"] = errorCode;
-    _data["errorMsg"] = errorMsg;
-    return _data;
-  }
-}
-
-class ArticleList {
   int? curPage;
   List<ArticleItem>? datas;
   int? offset;
@@ -37,7 +7,7 @@ class ArticleList {
   int? size;
   int? total;
 
-  ArticleList(
+  ArticleData(
       {this.curPage,
       this.datas,
       this.offset,
@@ -46,7 +16,7 @@ class ArticleList {
       this.size,
       this.total});
 
-  ArticleList.fromJson(Map<String, dynamic> json) {
+  ArticleData.fromJson(Map<String, dynamic> json) {
     if (json["curPage"] is int) {
       curPage = json["curPage"];
     }
@@ -89,6 +59,19 @@ class ArticleList {
   }
 }
 
+class TopArticleModel {
+  List<ArticleItem> topList;
+
+  TopArticleModel({required this.topList});
+
+  factory TopArticleModel.fromJson(List<dynamic>? json) { 
+    List<ArticleItem> topList =
+        json == null ? [] : json.map((e) => ArticleItem.fromJson(e)).toList();
+
+    return TopArticleModel(topList: topList);
+  }
+}
+
 class ArticleItem {
   bool? adminAdd;
   String? apkLink;
@@ -119,7 +102,7 @@ class ArticleItem {
   String? shareUser;
   int? superChapterId;
   String? superChapterName;
-  List<dynamic>? tags;
+  List? tags;
   String? title;
   int? type;
   int? userId;
@@ -253,6 +236,8 @@ class ArticleItem {
     }
     if (json["tags"] is List) {
       tags = json["tags"] ?? [];
+    } else {
+      tags = [];
     }
     if (json["title"] is String) {
       title = json["title"];

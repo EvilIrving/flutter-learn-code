@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../pages/home.dart'; // 导入 home.dart 页面
-import '../pages/article_page.dart'; // 导入 article_page.dart 页面
+import '../pages/home_page.dart'; // 导入 home.dart 页面
+import '../pages/articles_page.dart'; // 导入 article_page.dart 页面
 
 class Routes {
   static const String home = '/';

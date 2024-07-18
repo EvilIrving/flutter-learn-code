@@ -1,33 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:provider/provider.dart';
-import '../data/BannerData.dart';
-import '../model/home.dart';
+import 'package:something/data/articles_data.dart';
+import 'package:something/data/banner_data.dart';
+import '../model/home_model.dart';
 import '../route/routes.dart';
-import '../api/homeApi.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  // ignore: no_logic_in_create_state
   State<StatefulWidget> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  List<BannerListData>? bannerList;
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
 
   @override
   void initState() {
+    print('object init');
     super.initState();
-    // 异步请求数
-    getBannerData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      initArticleModel();
+    });
   }
 
-  void getBannerData() async {
-    bannerList = await HomeApi.getBanner();
-    setState(() {});
+  Future<void> initArticleModel() async {
+    await BannerModel().getBannerData();
+    await ArticleModel().initArticleModel(false);
   }
+
+  void refresh() {}
 
   @override
   Widget build(BuildContext context) {
@@ -36,20 +41,47 @@ class _HomePageState extends State<HomePage> {
         title: const Text('Home pages'),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              ChangeNotifierProvider(
-                create: (_) => BannerModel(),
-                child: Consumer<BannerModel>(
-                  builder: (context, bannerModel, child) {
-                    return buildSwiperViewWidget(bannerModel.bannerList);
-                  },
+        child: SmartRefresher(
+          enablePullDown: true,
+          enablePullUp: true,
+          header: const WaterDropHeader(),
+          footer: const ClassicFooter(),
+          onLoading: () async {
+            // 下拉加载
+            print('下拉加载');
+            await ArticleModel().initArticleModel(true);
+            _refreshController.loadComplete();
+          },
+          onRefresh: () async {
+            print('上拉刷新');
+            // 上拉刷新
+            await BannerModel().getBannerData();
+            await ArticleModel().initArticleModel(false);
+            _refreshController.refreshCompleted();
+          },
+          controller: _refreshController,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                ChangeNotifierProvider(
+                  create: (_) => BannerModel(),
+                  child: Consumer<BannerModel>(
+                    builder: (context, bannerModel, child) {
+                      return buildSwiperViewWidget(bannerModel.bannerList);
+                    },
+                  ),
                 ),
-              ),
-              // buildSwiperViewWidget(bannerList),
-              buildListViewWidget()
-            ],
+                // buildListViewWidget()
+                ChangeNotifierProvider(
+                  create: (_) => ArticleModel(),
+                  child: Consumer<ArticleModel>(
+                    builder: (context, articleModel, child) {
+                      return buildListViewWidget(articleModel.articleList);
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -57,7 +89,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// 轮播图
-  Widget buildSwiperViewWidget(List<BannerListData>? bannerList) {
+  Widget buildSwiperViewWidget(List<BannerItemData?>? bannerList) {
     return Container(
       height: 200,
       width: double.infinity,
@@ -66,7 +98,7 @@ class _HomePageState extends State<HomePage> {
         itemCount: bannerList?.length ?? 0,
         itemBuilder: (context, index) {
           return Center(
-            child: Image.network(bannerList?[index].imagePath ?? '',
+            child: Image.network(bannerList?[index]?.imagePath ?? '',
                 fit: BoxFit.fill),
           );
         },
@@ -78,21 +110,39 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// 列表
-  Widget buildListViewWidget() {
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        return buildCustomCard(context, "User $index", "2024-07-11 1$index:00",
-            "Category $index", "Title $index");
-      },
-      itemCount: 20,
-    );
+  Widget buildListViewWidget([List<ArticleItem>? articleList]) {
+    return articleList?.isEmpty ?? false
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              String name = '';
+              if (articleList?[index].author?.isNotEmpty == true) {
+                name = articleList?[index].author ?? '';
+              } else {
+                name = '匿名用户';
+              }
+
+              // String name = articleList?[index].author?.isNotEmpty ? articleList?[index].author ?? '' : '匿名用户';
+
+              return buildCustomCard(
+                  context,
+                  name,
+                  articleList?[index].niceShareDate ?? '',
+                  articleList?[index].chapterName ?? '',
+                  articleList?[index].title ?? '',
+                  articleList?[index].type ?? 0);
+            },
+            itemCount: 20,
+          );
   }
 
   /// 自定义卡片
   Widget buildCustomCard(BuildContext context, String username, String time,
-      String category, String title) {
+      String category, String title, int type) {
     return GestureDetector(
         onTap: () {
           // Navigator.push(
@@ -152,16 +202,13 @@ class _HomePageState extends State<HomePage> {
                     style: const TextStyle(color: Colors.grey),
                   ),
                   const SizedBox(width: 8.0),
-                  GestureDetector(
-                    onTap: () {
-                      // 点击事件处理
-                      print("object");
-                    },
-                    child: const Text(
-                      '置顶',
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                  ),
+
+                  type == 0
+                      ? const Text(
+                          '置顶',
+                          style: TextStyle(color: Colors.blue),
+                        )
+                      : const SizedBox(),
                 ],
               ),
               const SizedBox(height: 8.0),
