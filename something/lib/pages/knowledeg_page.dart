@@ -12,7 +12,7 @@ class _KnowledgePageState extends State<KnowledgePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Knowledge Page'),
+        title: const Text('芝士🧀'),
       ),
       body: const Center(
         child: Text('This is the Knowledge Page'),

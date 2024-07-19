@@ -20,7 +20,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    print('object init');
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initArticleModel();
@@ -48,12 +47,10 @@ class _HomePageState extends State<HomePage> {
           footer: const ClassicFooter(),
           onLoading: () async {
             // 下拉加载
-            print('下拉加载');
             await ArticleModel().initArticleModel(true);
             _refreshController.loadComplete();
           },
           onRefresh: () async {
-            print('上拉刷新');
             // 上拉刷新
             await BannerModel().getBannerData();
             await ArticleModel().initArticleModel(false);
@@ -156,7 +153,7 @@ class _HomePageState extends State<HomePage> {
             Routes.article, // 使用路由清单中定义的 article 路由
             arguments: {
               "name": title,
-              "content": "content of some article $title "
+              "url": "content of some article $title "
             }, // 传递参数给 ArticlePage 页面
           );
         },

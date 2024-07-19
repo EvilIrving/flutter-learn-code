@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 class ArticlePage extends StatefulWidget {
-  final String title; // 添加一个 final 字段用于存储 title
-
-  const ArticlePage({super.key, required this.title}); // 修改构造函数参数
+  final String? title;
+  final String? url;
+  const ArticlePage({super.key, this.title, this.url}); // 修改构造函数参数
 
   @override
   State<StatefulWidget> createState() => ArticlePageState();
 }
 
 class ArticlePageState extends State<ArticlePage> {
-  String _articleTitle = '';
-  String _articleContent = '这里是文章内容';
+  String? _articleTitle = '';
+  String? _articleUrl = '这里是文章内容';
 
   // @override
   // void initState() {
@@ -35,8 +35,8 @@ class ArticlePageState extends State<ArticlePage> {
     // 获取路由传值
     final args = ModalRoute.of(context)!.settings.arguments;
     if (args is Map) {
-      _articleTitle = args['name'];
-      _articleContent = args['content'];
+      _articleTitle = args['title'];
+      _articleUrl = args['url'];
       setState(() {});
     }
   }
@@ -45,12 +45,12 @@ class ArticlePageState extends State<ArticlePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_articleTitle.isNotEmpty ? _articleTitle : widget.title),
+        title: Text(_articleTitle ?? ''),
       ),
       body: Center(
           child: Column(
         children: [
-          Text(_articleContent),
+          Text(_articleUrl ?? ''),
           ElevatedButton(
             child: const Text('返回'),
             onPressed: () {

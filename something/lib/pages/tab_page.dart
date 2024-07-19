@@ -13,7 +13,7 @@ class TabPage extends StatefulWidget {
 }
 
 class _TabPageState extends State<TabPage> {
-  int currentIndex = 0;
+  int currentIndex = 2;
 
   late List<Widget> pages;
 
@@ -25,6 +25,7 @@ class _TabPageState extends State<TabPage> {
 
   late ValueChanged<int>? onTabChanged;
 
+  @override
   void initState() {
     super.initState();
 
