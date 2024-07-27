@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:something/pages/tab_page.dart';
-
+import 'package:something/service_locator.dart';
 import 'route/Routes.dart';
 import 'request/http_dio.dart';
 import 'package:oktoast/oktoast.dart';
 
-void main() {
-  Request.init(baseUrl: 'https://wanandroid.com'); // 初始化请求库
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await setupLocator();
+
+  Request.init(baseUrl: 'https://wanandroid.com/'); // 初始化请求库
   runApp(const MyApp());
 }
 

@@ -23,8 +23,8 @@ class ResponseInterceptor extends Interceptor {
               requestOptions: response.requestOptions, data: result.data));
         } else if (result.errorCode == 10001) {
           // 登录失效
-        } else {
-          // some other
+        } else if (result.errorCode == -1) {
+          showToast(result.errorMsg ?? '用户名已经被注册');
         }
       } catch (e) {
         handler.reject(

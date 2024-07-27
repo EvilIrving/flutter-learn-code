@@ -4,13 +4,13 @@ import 'package:something/request/http_dio.dart';
 
 class HotKeyApi {
   static Future<List<HotWebItem>?>? getHotWebList() async {
-    Response response = await Request.get('/friend/json');
+    Response response = await Request.get('friend/json');
     HotWebModel hotweb = HotWebModel.fromJson(response.data);
     return hotweb.data ?? [];
   }
 
   static Future<List<HotKeyItem>?>? getHotKeyList() async {
-    Response response = await Request.get('/hotkey/json');
+    Response response = await Request.get('hotkey/json');
     HotKeyModel hotkey = HotKeyModel.fromJson(response.data);
     return hotkey.data ?? [];
   }

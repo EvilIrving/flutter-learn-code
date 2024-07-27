@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:something/request/cookies_interceptor.dart';
 import 'package:something/request/interceptor.dart';
 
 class Request {
@@ -14,7 +15,7 @@ class Request {
     String? contentType,
   }) {
     _dio.options = BaseOptions(
-      baseUrl: baseUrl ?? 'https://wanandroid.com',
+      baseUrl: baseUrl ?? 'https://wanandroid.com/',
       connectTimeout: connectTimeout ?? _defaultTimeout,
       receiveTimeout: receiveTimeout ?? _defaultTimeout,
       sendTimeout: sendTimeout ?? _defaultTimeout,
@@ -22,6 +23,7 @@ class Request {
       contentType: contentType ?? Headers.jsonContentType,
     );
 
+    _dio.interceptors.add(CookiesInterceptor());
     // addInterceptor();
     _dio.interceptors.add(ResponseInterceptor());
   }
@@ -40,10 +42,14 @@ class Request {
     }
   }
 
-  static Future<Response> post(String path,
-      {Map<String, dynamic>? data}) async {
+  static Future<Response> post(
+    String path, {
+    Map<String, dynamic>? data,
+    Map<String, dynamic>? queryParameters,
+  }) async {
     try {
-      final response = await _dio.post(path, data: data);
+      final response =
+          await _dio.post(path, data: data, queryParameters: queryParameters);
       return response;
     } catch (e) {
       return Response(

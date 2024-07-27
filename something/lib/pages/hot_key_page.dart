@@ -55,6 +55,7 @@ class _HotKeyPageState extends State<HotKeyPage> {
   Widget buildHeaderWrapper(String name, {Widget? icon}) {
     return Container(
       height: 40,
+      margin:const EdgeInsets.only(top: 10, bottom: 10),
       decoration: const BoxDecoration(
         border: Border(
             top: BorderSide(color: Colors.grey, width: 1),
