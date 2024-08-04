@@ -62,4 +62,16 @@ class ArticleModel extends ChangeNotifier {
     List<ArticleItem> list = loadMore ? [] : await HomeApi.getTopArticleList();
     return list;
   }
+
+  Future<void> setCollect(String? id, int index) async {
+    bool success = await HomeApi.collect('$id');
+    articleList[index].collect = success;
+    notifyListeners();
+  }
+
+  Future<void> cancelCollect(String? id, int index) async {
+    bool success = await HomeApi.unCollect('$id');
+    articleList[index].collect = !success;
+    notifyListeners();
+  }
 }

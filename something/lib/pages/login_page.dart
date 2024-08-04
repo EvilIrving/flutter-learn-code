@@ -49,10 +49,10 @@ class _LoginPageState extends State<LoginPage> {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  buildTextField('用户名', Icons.person, _usernameController,
-                      (value) => vm.loginForm.username = value, true , obscureText: false),
+                  buildTextField('woshidaren', Icons.person, _usernameController,
+                      (value) => vm.loginForm.username = value,   true , obscureText: false),
                   const SizedBox(height: 16),
-                  buildTextField('密码', Icons.https,  _passwordController,
+                  buildTextField('123456', Icons.https,  _passwordController,
                       (value) => vm.loginForm.password = value, false,obscureText: true),
                   const SizedBox(height: 36),
                   borderTextButton(

@@ -22,20 +22,13 @@ class HomeApi {
     return articles.topList;
   }
 
-  static Future<List<ArticleItem>> login() async {
-    Response response = await Request.post('user/login');
-    TopArticleModel articles = TopArticleModel.fromJson(response.data);
-    return articles.topList;
+  static Future<bool> collect(String id) async {
+    Response response = await Request.post('/lg/collect/$id/json');
+    return response.data != null;
   }
 
-  static Future<bool> register(
-      String username, String password, String repassword) async {
-    Response response = await Request.post('user/register', queryParameters: {
-      'username': username,
-      'password': password,
-      'repassword': repassword
-    });
-    print('注册.data: ${response}');
-    return true;
+  static Future<bool> unCollect(String id) async {
+    Response response = await Request.post('lg/uncollect_originId/$id/json');
+    return response.data != null;
   }
 }

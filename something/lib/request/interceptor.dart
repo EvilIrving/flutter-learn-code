@@ -20,7 +20,8 @@ class ResponseInterceptor extends Interceptor {
       try {
         if (result.errorCode == 0) {
           handler.next(Response(
-              requestOptions: response.requestOptions, data: result.data));
+              requestOptions: response.requestOptions,
+              data: result.data ?? true));
         } else if (result.errorCode == 10001) {
           // 登录失效
         } else if (result.errorCode == -1) {

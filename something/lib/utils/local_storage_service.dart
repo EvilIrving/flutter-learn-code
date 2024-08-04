@@ -56,4 +56,14 @@ class LocalStorageService {
       _preferences?.setString(key, json.encode(content));
     }
   }
+
+   ///删除key
+  Future<bool> remove(String key) async{
+   return await _preferences?.remove(key) ?? false;
+  }
+
+  ///清空
+  Future<bool> clear() async{
+    return await _preferences?.clear() ?? false;
+  }
 }

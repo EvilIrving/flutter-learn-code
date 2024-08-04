@@ -13,14 +13,14 @@ class KnowledegPageModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  String generateSubtitle(List<KnowledegChildren?>? children) {
+  String generateSubtitle(List<KnowledegChildren>? children) {
     if (children == null || children.isEmpty == true) {
       return '';
     }
 
     StringBuffer subtitle = StringBuffer('');
     for (var child in children) {
-      subtitle.write('${child?.name} ');
+      subtitle.write('${child.name} ');
     }
 
     return subtitle.toString();

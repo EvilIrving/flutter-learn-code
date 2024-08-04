@@ -1,6 +1,9 @@
+ 
 import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:something/api/personal_api.dart';
+import 'package:something/service_locator.dart';
+import 'package:something/utils/local_storage_service.dart';
 
 class RegisterForm {
   String? username;
@@ -9,12 +12,13 @@ class RegisterForm {
 }
 
 class LoginForm {
-  String? username;
-  String? password;
+  String? username = 'woshidaren';
+  String? password = '123456';
 }
 
 class LoginModel extends ChangeNotifier {
   LoginForm loginForm = LoginForm();
+  final LocalStorageService storageService = locator<LocalStorageService>();
 
   Future<bool> loginUser() async {
     if (!isValid()) {
@@ -24,6 +28,7 @@ class LoginModel extends ChangeNotifier {
     bool result = await PersonalApi.login(
         loginForm.username ?? '', loginForm.password ?? '');
     if (result) {
+      storageService.userName = loginForm.username ?? '';
       showToast('Login successful');
     } else {
       showToast('Login failed');

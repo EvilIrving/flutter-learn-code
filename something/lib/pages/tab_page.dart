@@ -13,7 +13,7 @@ class TabPage extends StatefulWidget {
 }
 
 class _TabPageState extends State<TabPage> {
-  int currentIndex = 1;
+  int currentIndex = 3;
 
   late List<Widget> pages;
 

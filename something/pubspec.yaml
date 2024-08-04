@@ -24,6 +24,10 @@ dependencies:
   pull_to_refresh: ^2.0.0
   shared_preferences: ^2.2.3
   get_it: ^7.7.0
+  flutter_html: ^3.0.0-alpha.6
+  flutter_inappwebview: ^6.0.0
+  package_info_plus: ^8.0.1
+  device_info_plus: ^10.1.1
 
 dev_dependencies:
   flutter_test:

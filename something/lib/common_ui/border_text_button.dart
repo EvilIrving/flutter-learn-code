@@ -1,5 +1,24 @@
 import 'package:flutter/material.dart';
 
+//白色字体14号
+TextStyle whiteTextStyle14 = const TextStyle(color: Colors.white, fontSize: 14);
+//白色字体15号
+TextStyle whiteTextStyle15 = const TextStyle(color: Colors.white, fontSize: 15);
+//黑色字体13号
+TextStyle blackTextStyle13 = const TextStyle(fontSize: 13, color: Colors.black);
+//标题文本15号
+TextStyle titleTextStyle15 = const TextStyle(color: Colors.black, fontSize: 15);
+Text normalText(String text) {
+  String truncatedText =
+      text.length > 15 ? '${text.substring(0, 15)}...' : text;
+  return Text(
+    truncatedText,
+    softWrap: true,
+    style: const TextStyle(
+        overflow: TextOverflow.fade, color: Colors.black, fontSize: 15),
+  );
+}
+
 Widget borderTextButton({
   required String title,
   required Function() onPressed,

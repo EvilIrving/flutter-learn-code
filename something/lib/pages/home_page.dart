@@ -18,6 +18,9 @@ class _HomePageState extends State<HomePage> {
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
+  final BannerModel _bannerModel = BannerModel();
+  final ArticleModel _articleModel = ArticleModel();
+
   @override
   void initState() {
     super.initState();
@@ -27,8 +30,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> initArticleModel() async {
-    await BannerModel().getBannerData();
-    await ArticleModel().initArticleModel(false);
+    await _bannerModel.getBannerData();
+    await _articleModel.initArticleModel(false);
   }
 
   void refresh() {}
@@ -125,21 +128,15 @@ class _HomePageState extends State<HomePage> {
 
               // String name = articleList?[index].author?.isNotEmpty ? articleList?[index].author ?? '' : '匿名用户';
 
-              return buildCustomCard(
-                  context,
-                  name,
-                  articleList?[index].niceShareDate ?? '',
-                  articleList?[index].chapterName ?? '',
-                  articleList?[index].title ?? '',
-                  articleList?[index].type ?? 0);
+              return buildCustomCard(context, name, articleList?[index], index);
             },
             itemCount: 20,
           );
   }
 
   /// 自定义卡片
-  Widget buildCustomCard(BuildContext context, String username, String time,
-      String category, String title, int type) {
+  Widget buildCustomCard(
+      BuildContext context, String username, ArticleItem? item, int index) {
     return GestureDetector(
         onTap: () {
           // Navigator.push(
@@ -152,8 +149,8 @@ class _HomePageState extends State<HomePage> {
             context,
             Routes.article, // 使用路由清单中定义的 article 路由
             arguments: {
-              "name": title,
-              "url": "content of some article $title "
+              "name": item?.title,
+              "url": "content of some article ${item?.title} "
             }, // 传递参数给 ArticlePage 页面
           );
         },
@@ -177,15 +174,15 @@ class _HomePageState extends State<HomePage> {
             children: [
               Row(
                 children: [
-                  ClipRRect(
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(20.0)),
-                      child: Image.asset('assets/user.png',
-                          width: 40, height: 40, fit: BoxFit.cover)),
-                  // const CircleAvatar(
-                  //   backgroundImage: AssetImage('assets/user.png'),
-                  //   radius: 20.0,
-                  // ),
+                  // ClipRRect(
+                  //     borderRadius:
+                  //         const BorderRadius.all(Radius.circular(20.0)),
+                  //     child: Image.asset('assets/user.png',
+                  //         width: 40, height: 40, fit: BoxFit.cover)),
+                  const CircleAvatar(
+                    backgroundImage: AssetImage('assets/user.png'),
+                    radius: 20.0,
+                  ),
 
                   const SizedBox(width: 8.0),
                   Text(
@@ -195,12 +192,12 @@ class _HomePageState extends State<HomePage> {
                   const Spacer(),
                   // const Expanded(child: SizedBox()),
                   Text(
-                    time,
+                    item?.niceDate ?? '',
                     style: const TextStyle(color: Colors.grey),
                   ),
                   const SizedBox(width: 8.0),
 
-                  type == 0
+                  item?.type == 0
                       ? const Text(
                           '置顶',
                           style: TextStyle(color: Colors.blue),
@@ -210,7 +207,7 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 8.0),
               Text(
-                title,
+                item?.title ?? '',
                 style: const TextStyle(
                     fontSize: 16.0, fontWeight: FontWeight.bold),
               ),
@@ -218,17 +215,24 @@ class _HomePageState extends State<HomePage> {
               Row(
                 children: [
                   Text(
-                    category,
+                    item?.author ?? item?.shareUser ?? '',
                     style: const TextStyle(color: Colors.grey),
                   ),
                   const Spacer(),
                   GestureDetector(
-                    onTap: () {
+                    onTap: () async { 
                       // 点击事件处理
+                      if (item?.collect == true) {
+                        await _articleModel.setCollect('${item?.id}', index);
+                      } else {
+                        await _articleModel.cancelCollect('${item?.id}', index);
+                      }
                     },
-                    child: const Icon(
+                    child: Icon(
                       Icons.star,
-                      color: Colors.amber,
+                      color: item?.collect ?? false
+                          ? Colors.black38
+                          : Colors.amber,
                     ),
                   ),
                 ],

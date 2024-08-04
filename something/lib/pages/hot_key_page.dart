@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:something/data/hot_key_data.dart';
+import 'package:something/pages/search_page.dart';
+import 'package:something/route/router_util.dart';
 import 'package:something/route/routes.dart';
 import '../model/hot_key_model.dart';
 
@@ -31,7 +33,7 @@ class _HotKeyPageState extends State<HotKeyPage> {
                     Consumer<HotPageModel>(builder: (context, hotModel, child) {
                       return buildGridView(true,
                           hotKeyList: hotModel.hotKeyItems, itemTap: (value) {
-                        print('hotkey:$value');
+                        RouterUtils.push(context, SearchPage(word: value));
                       });
                     }),
                     buildHeaderWrapper('热点网站'),
@@ -55,7 +57,7 @@ class _HotKeyPageState extends State<HotKeyPage> {
   Widget buildHeaderWrapper(String name, {Widget? icon}) {
     return Container(
       height: 40,
-      margin:const EdgeInsets.only(top: 10, bottom: 10),
+      margin: const EdgeInsets.only(top: 10, bottom: 10),
       decoration: const BoxDecoration(
         border: Border(
             top: BorderSide(color: Colors.grey, width: 1),
@@ -70,7 +72,9 @@ class _HotKeyPageState extends State<HotKeyPage> {
           if (icon != null)
             IconButton(
               icon: icon,
-              onPressed: () {},
+              onPressed: () {
+                RouterUtils.pushForNamed(context, '/search');
+              },
             ),
         ],
       ),

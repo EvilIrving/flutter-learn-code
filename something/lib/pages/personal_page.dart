@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:something/route/router_util.dart';
 
 class PersonalPage extends StatefulWidget {
   const PersonalPage({super.key});
@@ -8,7 +9,12 @@ class PersonalPage extends StatefulWidget {
 }
 
 class _PersonalPageState extends State<PersonalPage> {
-  List<String> labels = ["收藏", '检查更新', '关于我们'];
+  List<Map<String, String>> labels = [
+    {'label': '收藏', 'router': "/collect"},
+    {'label': '检查更新', 'router': "/update"},
+    {'label': '关于我们', 'router': "/aboutus"}
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +45,7 @@ class _PersonalPageState extends State<PersonalPage> {
             ),
             Column(
               children: buildMenus(labels, itemTap: (value) {
-                print('点击了$value');
+                RouterUtils.pushForNamed(context, value);
               }),
             )
           ],
@@ -48,7 +54,7 @@ class _PersonalPageState extends State<PersonalPage> {
     );
   }
 
-  List<Widget> buildMenus(List<String> labels,
+  List<Widget> buildMenus(List<Map<String, String>> labels,
       {ValueChanged<String>? itemTap}) {
     List<Widget> menuItems = [];
     for (int index = 0; index < labels.length; index++) {
@@ -57,10 +63,11 @@ class _PersonalPageState extends State<PersonalPage> {
     return menuItems;
   }
 
-  Widget buildMenuItem(String label, ValueChanged<String>? itemTap) {
+  Widget buildMenuItem(
+      Map<String, String> label, ValueChanged<String>? itemTap) {
     return GestureDetector(
       onTap: () {
-        itemTap?.call(label);
+        itemTap?.call(label['router'] ?? '');
       },
       child: Container(
         width: double.infinity,
@@ -72,11 +79,16 @@ class _PersonalPageState extends State<PersonalPage> {
             borderRadius: const BorderRadius.all(Radius.circular(6))),
         child: Row(
           children: [
-            Text(label,
-                style: const TextStyle(fontSize: 16, color: Colors.black)),
+            Text(
+              label['label'] ?? '',
+              // style: const TextStyle(fontSize: 16, color: Colors.black),
+            ),
             const Spacer(),
-            const Icon(Icons.arrow_forward_ios_rounded,
-                size: 16, color: Colors.black),
+            const Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: 16,
+              // color: Colors.black,
+            ),
           ],
         ),
       ),
